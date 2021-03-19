@@ -22,17 +22,29 @@ int main(int argc, char* argv[]) {
 
 
   std::ifstream  inpFile(argv[1], std::ios::binary);
-
+  std::ifstream  inpFile2(argv[1], std::ios::binary);
   std::ofstream  outFile(argv[2], std::ios::binary);
 
-  outFile << inpFile.rdbuf();
+  //get size of file
+  inpFile.seekg (0,inpFile.end);
+  long int size = inpFile.tellg();
+  inpFile.seekg (0);
+
+  //allocate memory to hold video
+  char* buffer = new char[size];
+
+  //read input
+  inpFile.read (buffer,size);
+
+
+
+  //outFile << inpFile.rdbuf();
   //copy file to destination with name
 
-  //read in #TODO
   //char mask = 0x01;
   char * searchMe = new char [searchSize];
-  inpFile.seekg (0, std::ios::beg);
-  inpFile.read(searchMe, searchSize * sizeof(char));
+  
+  inpFile2.read(searchMe, searchSize * sizeof(char));
 
   //find this
   /*
@@ -52,7 +64,7 @@ int main(int argc, char* argv[]) {
 
   std::cout << std::endl;
 
-  //need to find 2A D7 B1
+  //need to find 0x 2A D7 B1
   char * findThis1 = new char [3];
   findThis1[0] = 0x2A;
   findThis1[1] = 0xD7;
@@ -60,7 +72,7 @@ int main(int argc, char* argv[]) {
 
   char * findThis2 = new char [2];
 
-  //find 0x4489
+  //find 0x 44 89
   findThis2[0] = 0x44;
   findThis2[1] = 0x89;
 
@@ -72,14 +84,58 @@ int main(int argc, char* argv[]) {
   int location1 = findBinaryString(searchMe,findThis1,searchSize,3);
 
   if  (location1== -1){
-    std::cout << "location not found, terminating" << std::endl;
+    std::cout << "location 1 not found, terminating" << std::endl;
+    return -1;
   }
 
-  //std::cout << "location of bytes: " << findBinaryString(searchMe,findThis2,searchSize,2) << std::endl; 
+  int location2 = location1 + 10;
+
+
+
+  std::cout << "location of bytes: " << location2 << std::endl; 
+
+  //delete some data where time is located
+  buffer[location2] = 0x00;
+  buffer[location2 + 1] = 0x00;
+
+  //save file then delete data
+  outFile.write (buffer,size);
+  delete[] buffer;
+
+  outFile.close();
+  inpFile.close();
 
 
 
   
+  //std::ofstream  writeHere(argv[2], std::ios::binary);
+
+  //writeHere.write( (char*) &searchMe, sizeof(searchMe) );
+
+  //outFile.seekp(0, std::ios::beg);
+
+  //if () std::cout << "error" << std::endl;
+
+  //outFile.write(searchMe, sizeof(searchMe) );
+
+  
+  /*
+  FILE *writeOver;
+
+  writeOver = fopen(argv[2], "a");
+
+  fseek(writeOver,location2,SEEK_SET);
+
+
+  //fpos_t set_me;
+
+  std::cout << (searchMe[location2] & 0xff) << std::endl;
+  
+  fwrite(searchMe + location2 ,1,1,writeOver);
+
+  fclose(writeOver);
+
+  */
 
 
   //get inp and output stream
