@@ -14,5 +14,4 @@ main - name of compiled program
 fileInp - add a path to the file you want to read from
 fileOut - location of video with broken duration
 
-make sure fileInp and fileOut are diffrent, as you will just end up deleting the inpfile.
-
+make sure fileInp and fileOut are diffrent.

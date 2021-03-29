@@ -15,7 +15,11 @@ int main(int argc, char* argv[]) {
   if (argc <= 2){
     std::cout << "please enter a file inp and out in format ./main inp out" << std::endl;
     return -1;
-  }else{
+  }else if(argv[1] == argv[2]){
+    std::cout << "Please make file input and file output diffrent." << std::endl;
+    return -1;
+  }
+  else{
     std::cout << "input file path is: " << argv[1] << " output is: " << argv[2] << std::endl;
   }
 
@@ -98,4 +102,3 @@ int findBinaryString(char *inp, char *findMe, int inpSize, int findSize){
   //no location found, return -1
   return -1;
 }
- 
